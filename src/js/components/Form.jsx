@@ -8,10 +8,13 @@ function mapDispatchToProps(dispatch) {
     addArticle: article => dispatch(addArticle(article))
   }
 }
+const mapStateToProps = state => {
+  return { articles: state.articles, message: state.message }
+}
 
 class ConnectedForm extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       title: "",
       message: ""
@@ -29,12 +32,12 @@ class ConnectedForm extends Component {
     const { title } = this.state
     const id = uuidv1()
     this.props.addArticle({ title, id })
-    this.setState({ title: "" })
+    this.setState(Object.assign({},this.state,{ title: "" , message: this.props.message}))
   }
 
   render() {
     const { title } = this.state
-    const { message } = this.state
+    const { message } = this.props
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="form-group">
@@ -47,7 +50,9 @@ class ConnectedForm extends Component {
             onChange={this.handleChange}
           />
         </div>
-        {message.length>0 ? message : null}
+        <p className="text-danger">
+        {message ? message : null}
+        </p>
         <button type="submit" className="btn btn-success btn-lg">
           SAVE
         </button>
@@ -56,5 +61,5 @@ class ConnectedForm extends Component {
   }
 }
 
-const Form = connect(null, mapDispatchToProps)(ConnectedForm)
+const Form = connect(mapStateToProps, mapDispatchToProps)(ConnectedForm)
 export default Form

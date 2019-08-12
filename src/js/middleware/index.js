@@ -1,5 +1,5 @@
 import { ADD_ARTICLE } from "../constants/action-types"
-import { FOUND_BAD_WORD } from "../constants/action-types"
+import { foundBadWord } from "../actions/index.js"
 
 const forbiddenWords = ["spam", "money"]
 
@@ -13,7 +13,7 @@ export function forbiddenWordsMiddleware({ dispatch }) {
           action.payload.title.includes(word)
         )
         if (foundWord.length) {
-          return dispatch({ type: "FOUND_BAD_WORD" })
+          return dispatch(foundBadWord())
         }
       }
       return next(action)
